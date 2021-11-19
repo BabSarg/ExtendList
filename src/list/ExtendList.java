@@ -7,15 +7,19 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class ExtendList<T> extends ArrayList<T> {
 
     public <R> List<R> map(Function<T, R> function) {
-        List<R> list = new ArrayList<>();
-        for (Object elem : toArray()) {
-            list.add(function.apply((T) elem));
-        }
-        return list;
+//        List<R> list = new ArrayList<>();
+//        for (Object elem : toArray()) {
+//            list.add(function.apply((T) elem));
+//        }
+//        return list;
+        return this.stream()
+                .map(elem -> function.apply(elem))
+                .collect(Collectors.toList());
     }
 
     public void fill(int capacity, Supplier<T> supplier) {
@@ -25,14 +29,15 @@ public class ExtendList<T> extends ArrayList<T> {
     }
 
     public boolean forall(Predicate<T> predicate) {
-        int trueElementsCount = 0;
-        for (Object elem : toArray()) {
-            boolean test = predicate.test((T) elem);
-            if (test) {
-                trueElementsCount++;
-            }
-        }
-        return trueElementsCount == size();
+//        int trueElementsCount = 0;
+//        for (Object elem : toArray()) {
+//            boolean test = predicate.test((T) elem);
+//            if (test) {
+//                trueElementsCount++;
+//            }
+//        }
+//        return trueElementsCount == size();
+        return this.stream().allMatch(predicate);
     }
 
     public List<T>[] partition(Predicate<T> predicate) {
@@ -50,10 +55,11 @@ public class ExtendList<T> extends ArrayList<T> {
     }
 
     public T reduce(T elem,BinaryOperator<T> binaryOperator){
-        for (Object element : toArray()) {
-            elem = binaryOperator.apply(elem, (T) element);
-        }
-        return elem;
+//        for (Object element : toArray()) {
+//            elem = binaryOperator.apply(elem, (T) element);
+//        }
+//        return elem;
+        return this.stream().reduce(elem,binaryOperator);
     }
 
 
@@ -67,6 +73,7 @@ public class ExtendList<T> extends ArrayList<T> {
         System.out.println(s);
         List<String> map = extendList.map(integer -> "number = " + integer);
         System.out.println(map);
+
 
         List<Integer>[] result = extendList.partition(integer -> integer % 2 == 0);
 
